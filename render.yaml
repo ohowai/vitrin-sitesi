@@ -10,8 +10,6 @@ services:
         value: production
       - key: COOKIE_SECURE
         value: "true"
-      - key: DB_DIR
-        value: /var/data
       - key: SESSION_SECRET
         generateValue: true
       - key: ADMIN_USERNAME
