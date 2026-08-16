@@ -1,0 +1,109 @@
+<% const activeAdminNav = 'urunler'; %>
+<%- include('../partials/admin-head', { title, username, activeAdminNav, csrfToken }) %>
+
+<div class="admin-header">
+  <div>
+    <h1><%= product && product.id ? 'Ürünü düzenle' : 'Yeni ürün' %></h1>
+    <p class="sub">Ürün bilgilerini, fotoğraf bağlantılarını ve mevcut bedenleri girin.</p>
+  </div>
+  <a href="/admin/urunler" class="btn">← Ürünlere dön</a>
+</div>
+
+<% if (errors && errors.length) { %>
+  <div class="alert alert-error">
+    <strong>Formda hatalar var:</strong>
+    <ul><% errors.forEach(function(e) { %><li><%= e %></li><% }) %></ul>
+  </div>
+<% } %>
+
+<form method="post" action="<%= product && product.id ? '/admin/urunler/' + product.id + '/duzenle' : '/admin/urunler/yeni' %>">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+  <div class="form-grid">
+    <div>
+      <div class="field">
+        <label for="name">Ürün adı</label>
+        <input type="text" id="name" name="name" maxlength="200" required value="<%= product ? product.name : '' %>">
+      </div>
+
+      <div class="field">
+        <label for="description">Açıklama</label>
+        <textarea id="description" name="description" maxlength="4000"><%= product ? product.description : '' %></textarea>
+      </div>
+
+      <div class="field">
+        <label>Ürün fotoğrafları (URL)</label>
+        <div id="image-url-wrap">
+          <% imageUrls.forEach(function(url) { %>
+            <div class="image-url-row">
+              <div class="thumb-preview" style="<%= url ? `background-image:url('${url.replace(/'/g, '')}')` : '' %>"></div>
+              <input type="url" name="image_url" placeholder="https://ornek-cdn.com/urun-foto.jpg" maxlength="2048" value="<%= url %>">
+              <button type="button" class="remove-image-btn" title="Kaldır" aria-label="Görseli kaldır">&times;</button>
+            </div>
+          <% }) %>
+        </div>
+        <button type="button" id="add-image-btn" class="btn btn-sm add-image-btn">+ Görsel bağlantısı ekle</button>
+        <p class="hint">Fotoğraflar sunucuya yüklenmez — yalnızca dış bağlantı (URL) olarak saklanır. Böylece hosting alanınız dolmaz. Örn. bir CDN, Unsplash veya kendi görsel barındırma servisiniz.</p>
+      </div>
+
+      <label>Mevcut bedenler</label>
+      <p class="hint" style="margin-top:-6px; margin-bottom:14px;">Alıcı bu ürünün hangi bedenlerde mevcut olduğunu vitrinde görecek.</p>
+      <% Object.keys(sizesGrouped).forEach(function(group) { %>
+        <div class="size-picker-group">
+          <h4><%= group %></h4>
+          <div class="size-picker-grid">
+            <% sizesGrouped[group].forEach(function(sz) { %>
+              <label class="size-pick">
+                <input type="checkbox" name="size_id" value="<%= sz.id %>" <%= selectedSizeIds.includes(sz.id) ? 'checked' : '' %>>
+                <span><%= sz.label %></span>
+              </label>
+            <% }) %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+    <div class="form-side">
+      <div class="panel" style="padding:22px;">
+        <div class="field">
+          <label for="category_id">Kategori</label>
+          <select id="category_id" name="category_id">
+            <option value="">— Kategorisiz —</option>
+            <% categories.forEach(function(cat) { %>
+              <option value="<%= cat.id %>" <%= product && String(product.category_id) === String(cat.id) ? 'selected' : '' %>><%= cat.name %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="price">Fiyat etiketi (opsiyonel, yalnızca gösterim)</label>
+          <input type="text" id="price" name="price" maxlength="40" placeholder="Örn. 1.250 ₺" value="<%= product && product.price ? product.price : '' %>">
+        </div>
+
+        <div class="field">
+          <label for="stock_status">Stok durumu</label>
+          <select id="stock_status" name="stock_status">
+            <option value="in_stock" <%= (!product || product.stock_status === 'in_stock') ? 'selected' : '' %>>Mevcut</option>
+            <option value="low_stock" <%= product && product.stock_status === 'low_stock' ? 'selected' : '' %>>Az kaldı</option>
+            <option value="out_of_stock" <%= product && product.stock_status === 'out_of_stock' ? 'selected' : '' %>>Tükendi</option>
+          </select>
+        </div>
+
+        <div class="field checkbox-row">
+          <input type="checkbox" id="is_active" name="is_active" <%= (!product || product.is_active) ? 'checked' : '' %>>
+          <label for="is_active">Vitrinde yayında</label>
+        </div>
+        <div class="field checkbox-row">
+          <input type="checkbox" id="is_featured" name="is_featured" <%= product && product.is_featured ? 'checked' : '' %>>
+          <label for="is_featured">Öne çıkan ürün</label>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-solid" style="flex:1;"><%= product && product.id ? 'Değişiklikleri kaydet' : 'Ürünü ekle' %></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<%- include('../partials/admin-foot') %>

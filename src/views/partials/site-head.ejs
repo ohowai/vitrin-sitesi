@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= title %></title>
+<meta name="description" content="VITRINE — dikkatle seçilmiş ürünlerin sergilendiği bir vitrin. Yalnızca gözden geçirin, beğenin, ilham alın.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/tokens.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/site.css">
+<link rel="icon" href="data:,">
+</head>
+<body>
+<a href="#icerik" class="skip-link">İçeriğe geç</a>
+<div class="curtain" aria-hidden="true">
+  <div class="curtain-panel"></div>
+  <div class="curtain-panel"></div>
+  <div class="curtain-panel"></div>
+  <div class="curtain-panel"></div>
+</div>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="/" class="brand">VITRINE<span class="brand-dot">.</span></a>
+    <nav class="nav" aria-label="Ana menü">
+      <a href="/" class="<%= typeof activeNav !== 'undefined' && activeNav === 'home' ? 'active' : '' %>">Anasayfa</a>
+      <a href="/katalog" class="<%= typeof activeNav !== 'undefined' && activeNav === 'katalog' ? 'active' : '' %>">Katalog</a>
+      <a href="/hakkinda" class="<%= typeof activeNav !== 'undefined' && activeNav === 'hakkinda' ? 'active' : '' %>">Hakkında</a>
+    </nav>
+    <button class="nav-toggle" aria-label="Menüyü aç" aria-expanded="false">☰</button>
+  </div>
+</header>
+<main id="icerik">

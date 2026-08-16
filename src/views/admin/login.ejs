@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= title %></title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/tokens.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/admin.css">
+<link rel="icon" href="data:,">
+</head>
+<body class="admin-body">
+  <div class="login-shell">
+    <div class="login-card">
+      <div class="login-brand">VITRINE<span>.</span></div>
+      <p class="login-sub">Admin Paneli</p>
+
+      <% if (error) { %>
+        <div class="alert alert-error"><%= error %></div>
+      <% } %>
+
+      <form method="post" action="/admin/login" autocomplete="off">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div class="field">
+          <label for="username">Kullanıcı adı</label>
+          <input type="text" id="username" name="username" required autocomplete="username" autofocus>
+        </div>
+        <div class="field">
+          <label for="password">Şifre</label>
+          <input type="password" id="password" name="password" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-solid">Giriş yap</button>
+      </form>
+      <a href="/" class="login-back">← Vitrine dön</a>
+    </div>
+  </div>
+</body>
+</html>

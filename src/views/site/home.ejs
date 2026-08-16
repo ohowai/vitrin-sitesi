@@ -1,0 +1,123 @@
+<% const activeNav = 'home'; %>
+<%- include('../partials/site-head', { title, activeNav }) %>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-mullion"></div>
+  <div class="hero-content">
+    <div>
+      <div class="hero-eyebrow"><span class="eyebrow">Kış Koleksiyonu · Yeni Vitrin</span></div>
+      <h1>Bakması<br><em>keyifli</em><br>bir vitrin.</h1>
+      <p class="hero-desc">VITRINE, dikkatle seçilmiş parçaların yalnızca sergilendiği bir dijital vitrindir. Gezin, inceleyin, ilham alın — satın alma yok, sadece bakış.</p>
+      <div class="hero-actions">
+        <a href="/katalog" class="btn btn-solid">Kataloğa Göz At</a>
+        <a href="/hakkinda" class="btn">Vitrin Nedir?</a>
+      </div>
+    </div>
+    <div class="hero-showcase">
+      <% if (featured[0]) { %>
+        <img src="<%= featured[0].images[0] ? featured[0].images[0].url : '' %>" alt="<%= featured[0].name %>" loading="eager">
+        <div class="hero-tag">✧ <%= featured[0].name %></div>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow">Bölümler</span>
+        <h2>Kategorilere göz atın</h2>
+      </div>
+      <a href="/katalog" class="section-link">Tümünü gör →</a>
+    </div>
+    <div class="category-strip reveal">
+      <% categories.forEach(function(cat, i) { %>
+        <a class="category-card" href="/kategori/<%= cat.slug %>">
+          <span class="num"><%= String(i + 1).padStart(2, '0') %></span>
+          <h3><%= cat.name %></h3>
+          <span class="arrow">→</span>
+        </a>
+      <% }) %>
+      <% if (categories.length === 0) { %>
+        <div class="category-card"><p>Henüz kategori eklenmedi.</p></div>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<% if (featured.length) { %>
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow">Vitrine Çıkanlar</span>
+        <h2>Öne çıkan parçalar</h2>
+      </div>
+      <a href="/katalog" class="section-link">Kataloğu gör →</a>
+    </div>
+    <div class="product-grid">
+      <% featured.forEach(function(p, i) { %>
+        <a href="/urun/<%= p.slug %>" class="product-card reveal reveal-delay-<%= (i % 4) + 1 %>">
+          <div class="frame">
+            <div class="frame-badges">
+              <% if (p.is_featured) { %><span class="badge badge-featured">Vitrin</span><% } %>
+              <% if (p.stock_status === 'low_stock') { %><span class="badge badge-low">Az Kaldı</span><% } %>
+              <% if (p.stock_status === 'out_of_stock') { %><span class="badge badge-out">Tükendi</span><% } %>
+            </div>
+            <img src="<%= p.images[0] ? p.images[0].url : '' %>" alt="<%= p.name %>" loading="lazy">
+          </div>
+          <div class="product-info">
+            <div>
+              <h3><%= p.name %></h3>
+              <span class="product-cat"><%= p.category_name || 'Genel' %></span>
+            </div>
+            <span class="product-sizes-mini"><%= p.sizes.length %> beden</span>
+          </div>
+        </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow">Son Eklenenler</span>
+        <h2>Yeni vitrine gelenler</h2>
+      </div>
+      <a href="/katalog" class="section-link">Tümünü gör →</a>
+    </div>
+    <% if (latest.length) { %>
+    <div class="product-grid">
+      <% latest.forEach(function(p, i) { %>
+        <a href="/urun/<%= p.slug %>" class="product-card reveal reveal-delay-<%= (i % 4) + 1 %>">
+          <div class="frame">
+            <div class="frame-badges">
+              <% if (p.stock_status === 'out_of_stock') { %><span class="badge badge-out">Tükendi</span><% } %>
+            </div>
+            <img src="<%= p.images[0] ? p.images[0].url : '' %>" alt="<%= p.name %>" loading="lazy">
+          </div>
+          <div class="product-info">
+            <div>
+              <h3><%= p.name %></h3>
+              <span class="product-cat"><%= p.category_name || 'Genel' %></span>
+            </div>
+            <span class="product-sizes-mini"><%= p.sizes.length %> beden</span>
+          </div>
+        </a>
+      <% }) %>
+    </div>
+    <% } else { %>
+      <div class="empty-state">
+        <h3>Vitrin henüz boş</h3>
+        <p>Admin panelinden ilk ürününüzü ekleyerek vitrini canlandırın.</p>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/site-foot') %>

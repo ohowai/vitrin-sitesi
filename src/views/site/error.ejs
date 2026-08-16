@@ -1,0 +1,10 @@
+<%- include('../partials/site-head', { title }) %>
+<section class="error-page">
+  <div>
+    <div class="error-code"><%= statusCode || '—' %></div>
+    <h1><%= title %></h1>
+    <p style="color:var(--bone-dim); max-width:44ch; margin:0 auto 30px;"><%= message %></p>
+    <a href="/" class="btn btn-solid">Anasayfaya dön</a>
+  </div>
+</section>
+<%- include('../partials/site-foot') %>

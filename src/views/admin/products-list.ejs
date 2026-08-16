@@ -1,0 +1,57 @@
+<% const activeAdminNav = 'urunler'; %>
+<%- include('../partials/admin-head', { title, username, activeAdminNav, csrfToken }) %>
+
+<div class="admin-header">
+  <div>
+    <h1>Ürünler</h1>
+    <p class="sub"><%= products.length %> ürün listeleniyor.</p>
+  </div>
+  <a href="/admin/urunler/yeni" class="btn btn-solid">+ Yeni ürün ekle</a>
+</div>
+
+<div class="toolbar">
+  <form method="get" action="/admin/urunler">
+    <input type="search" name="q" placeholder="Ürün adına göre ara…" value="<%= search %>">
+    <button type="submit" class="btn btn-sm">Ara</button>
+    <% if (search) { %><a href="/admin/urunler" class="btn btn-sm">Temizle</a><% } %>
+  </form>
+</div>
+
+<div class="panel">
+  <table>
+    <thead>
+      <tr><th></th><th>Ürün</th><th>Kategori</th><th>Fiyat</th><th>Bedenler</th><th>Stok</th><th>Durum</th><th></th></tr>
+    </thead>
+    <tbody>
+      <% if (products.length === 0) { %>
+        <tr class="empty-row"><td colspan="8">Sonuç bulunamadı.</td></tr>
+      <% } %>
+      <% products.forEach(function(p) { %>
+        <tr>
+          <td><img class="table-thumb" src="<%= p.images[0] ? p.images[0].url : '' %>" alt=""></td>
+          <td><a href="/admin/urunler/<%= p.id %>/duzenle" style="color:var(--bone); font-weight:500;"><%= p.name %></a></td>
+          <td><%= p.category_name || '—' %></td>
+          <td style="font-family:var(--font-mono); font-size:13px;"><%= p.price || '—' %></td>
+          <td><%= p.sizes.length %></td>
+          <td>
+            <% if (p.stock_status === 'in_stock') { %><span class="status-dot on">Mevcut</span>
+            <% } else if (p.stock_status === 'low_stock') { %><span class="status-dot" style="color:#d9b46a;">Az kaldı</span>
+            <% } else { %><span class="status-dot off">Tükendi</span><% } %>
+          </td>
+          <td><span class="status-dot <%= p.is_active ? 'on' : 'off' %>"><%= p.is_active ? 'Yayında' : 'Taslak' %></span></td>
+          <td>
+            <div class="row-actions">
+              <a href="/admin/urunler/<%= p.id %>/duzenle" class="btn btn-sm">Düzenle</a>
+              <form method="post" action="/admin/urunler/<%= p.id %>/sil" onsubmit="return confirm('“<%= p.name.replace(/'/g, '') %>” ürününü silmek istediğinize emin misiniz? Bu işlem geri alınamaz.');">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button type="submit" class="btn btn-sm btn-danger">Sil</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('../partials/admin-foot') %>

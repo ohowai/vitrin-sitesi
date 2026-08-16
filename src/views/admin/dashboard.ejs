@@ -1,0 +1,57 @@
+<% const activeAdminNav = 'dashboard'; %>
+<%- include('../partials/admin-head', { title, username, activeAdminNav, csrfToken }) %>
+
+<div class="admin-header">
+  <div>
+    <h1>Hoş geldiniz, <%= username %></h1>
+    <p class="sub">Vitrinin genel durumuna göz atın.</p>
+  </div>
+  <a href="/admin/urunler/yeni" class="btn btn-solid">+ Yeni ürün ekle</a>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="n"><%= stats.totalProducts %></div>
+    <div class="l">Toplam ürün</div>
+  </div>
+  <div class="stat-card">
+    <div class="n"><%= stats.activeProducts %></div>
+    <div class="l">Yayında</div>
+  </div>
+  <div class="stat-card">
+    <div class="n"><%= stats.totalCategories %></div>
+    <div class="l">Kategori</div>
+  </div>
+  <div class="stat-card">
+    <div class="n"><%= stats.outOfStock %></div>
+    <div class="l">Tükenen</div>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-head">
+    <h2>Son eklenen ürünler</h2>
+    <a href="/admin/urunler" class="section-link" style="font-size:13px; color:var(--brass);">Tümünü gör →</a>
+  </div>
+  <table>
+    <thead>
+      <tr><th></th><th>Ürün</th><th>Kategori</th><th>Bedenler</th><th>Durum</th></tr>
+    </thead>
+    <tbody>
+      <% if (recentProducts.length === 0) { %>
+        <tr class="empty-row"><td colspan="5">Henüz ürün eklenmedi. <a href="/admin/urunler/yeni" style="color:var(--brass);">İlk ürünü ekleyin →</a></td></tr>
+      <% } %>
+      <% recentProducts.forEach(function(p) { %>
+        <tr>
+          <td><img class="table-thumb" src="<%= p.images[0] ? p.images[0].url : '' %>" alt=""></td>
+          <td><a href="/admin/urunler/<%= p.id %>/duzenle" style="color:var(--bone);"><%= p.name %></a></td>
+          <td><%= p.category_name || '—' %></td>
+          <td><%= p.sizes.length %></td>
+          <td><span class="status-dot <%= p.is_active ? 'on' : 'off' %>"><%= p.is_active ? 'Yayında' : 'Taslak' %></span></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('../partials/admin-foot') %>

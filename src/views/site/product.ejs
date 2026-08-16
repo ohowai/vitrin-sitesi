@@ -1,0 +1,85 @@
+<% const activeNav = 'katalog'; %>
+<%- include('../partials/site-head', { title, activeNav }) %>
+
+<section class="container product-detail">
+  <div class="breadcrumb">
+    <a href="/">Anasayfa</a> &nbsp;/&nbsp;
+    <a href="/katalog">Katalog</a>
+    <% if (product.category_name) { %>
+      &nbsp;/&nbsp; <a href="/katalog?kategori=<%= product.category_slug %>"><%= product.category_name %></a>
+    <% } %>
+    &nbsp;/&nbsp; <span style="color:var(--bone);"><%= product.name %></span>
+  </div>
+
+  <div class="detail-grid">
+    <div>
+      <div class="gallery-main">
+        <img data-gallery-main src="<%= product.images[0] ? product.images[0].url : '' %>" alt="<%= product.name %>" style="transition:opacity .18s;">
+      </div>
+      <% if (product.images.length > 1) { %>
+        <div class="gallery-thumbs">
+          <% product.images.forEach(function(img, i) { %>
+            <button type="button" data-gallery-thumb="<%= img.url %>" class="<%= i === 0 ? 'active' : '' %>" aria-label="Görsel <%= i + 1 %>">
+              <img src="<%= img.url %>" alt="">
+            </button>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+
+    <div class="detail-info">
+      <span class="eyebrow"><%= product.category_name || 'Genel' %></span>
+      <h1><%= product.name %></h1>
+      <% if (product.price) { %><div class="detail-price"><%= product.price %></div><% } %>
+
+      <div class="stock-line">
+        <% if (product.stock_status === 'in_stock') { %>
+          <span class="stock-dot"></span> Vitrinde mevcut
+        <% } else if (product.stock_status === 'low_stock') { %>
+          <span class="stock-dot low"></span> Sınırlı sayıda
+        <% } else { %>
+          <span class="stock-dot out"></span> Şu an vitrinde yok
+        <% } %>
+      </div>
+
+      <p class="detail-desc"><%= product.description %></p>
+
+      <% if (product.sizes.length) { %>
+        <div class="size-select-title">Mevcut bedenler</div>
+        <div class="size-select-grid">
+          <% product.sizes.forEach(function(sz, i) { %>
+            <label class="size-select-item <%= !sz.available ? 'unavailable' : '' %>" data-size-select>
+              <input type="radio" name="size" value="<%= sz.label %>" <%= !sz.available ? 'disabled' : '' %>>
+              <span><%= sz.label %></span>
+            </label>
+          <% }) %>
+        </div>
+      <% } %>
+
+      <div class="notice-box">
+        Bu site yalnızca bir <strong>katalog vitrinidir</strong>. Ürünler yalnızca görüntüleme amaçlıdır; site üzerinden satın alma veya ödeme işlemi yapılmamaktadır.
+      </div>
+    </div>
+  </div>
+
+  <% if (related.length) { %>
+    <h2 class="related-title">Benzer parçalar</h2>
+    <div class="product-grid">
+      <% related.forEach(function(p, i) { %>
+        <a href="/urun/<%= p.slug %>" class="product-card reveal reveal-delay-<%= (i % 4) + 1 %>">
+          <div class="frame">
+            <img src="<%= p.images[0] ? p.images[0].url : '' %>" alt="<%= p.name %>" loading="lazy">
+          </div>
+          <div class="product-info">
+            <div>
+              <h3><%= p.name %></h3>
+              <span class="product-cat"><%= p.category_name || 'Genel' %></span>
+            </div>
+          </div>
+        </a>
+      <% }) %>
+    </div>
+  <% } %>
+</section>
+
+<%- include('../partials/site-foot') %>

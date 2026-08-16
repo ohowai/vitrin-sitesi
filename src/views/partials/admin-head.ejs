@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= title %></title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/tokens.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/admin.css">
+<link rel="icon" href="data:,">
+</head>
+<body class="admin-body">
+<div class="admin-shell">
+  <aside class="admin-sidebar">
+    <div>
+      <div class="admin-brand">VITRINE<span>.</span></div>
+      <div class="admin-role">@<%= username %></div>
+    </div>
+    <nav class="admin-nav">
+      <a href="/admin" class="<%= typeof activeAdminNav !== 'undefined' && activeAdminNav === 'dashboard' ? 'active' : '' %>"><span class="icon">◧</span> Panel</a>
+      <a href="/admin/urunler" class="<%= typeof activeAdminNav !== 'undefined' && activeAdminNav === 'urunler' ? 'active' : '' %>"><span class="icon">▤</span> Ürünler</a>
+      <a href="/admin/kategoriler" class="<%= typeof activeAdminNav !== 'undefined' && activeAdminNav === 'kategoriler' ? 'active' : '' %>"><span class="icon">◫</span> Kategoriler</a>
+      <a href="/admin/sifre-degistir" class="<%= typeof activeAdminNav !== 'undefined' && activeAdminNav === 'sifre' ? 'active' : '' %>"><span class="icon">✦</span> Şifre Değiştir</a>
+    </nav>
+    <div class="admin-sidebar-footer">
+      <a href="/" target="_blank" rel="noopener" class="view-site-link">↗ Siteyi görüntüle</a>
+      <form method="post" action="/admin/logout">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button type="submit" style="all:unset; cursor:pointer; font-size:12px; color:var(--bone-dim); display:block; padding:8px 12px;" onmouseover="this.style.color='var(--danger)'" onmouseout="this.style.color='var(--bone-dim)'">⎋ Çıkış yap</button>
+      </form>
+    </div>
+  </aside>
+  <div class="admin-main">

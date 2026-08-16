@@ -1,0 +1,53 @@
+<% const activeAdminNav = 'kategoriler'; %>
+<%- include('../partials/admin-head', { title, username, activeAdminNav, csrfToken }) %>
+
+<div class="admin-header">
+  <div>
+    <h1>Kategoriler</h1>
+    <p class="sub">Ürünleri gruplamak için kategoriler oluşturun.</p>
+  </div>
+</div>
+
+<% if (errors && errors.length) { %>
+  <div class="alert alert-error"><ul><% errors.forEach(function(e) { %><li><%= e %></li><% }) %></ul></div>
+<% } %>
+
+<div class="form-grid">
+  <div class="panel">
+    <div class="panel-head"><h2>Mevcut kategoriler</h2></div>
+    <table>
+      <thead><tr><th>Ad</th><th>Ürün sayısı</th><th></th></tr></thead>
+      <tbody>
+        <% if (categories.length === 0) { %>
+          <tr class="empty-row"><td colspan="3">Henüz kategori eklenmedi.</td></tr>
+        <% } %>
+        <% categories.forEach(function(cat) { %>
+          <tr>
+            <td><%= cat.name %></td>
+            <td><span class="badge-count"><%= cat.productCount %></span></td>
+            <td>
+              <form method="post" action="/admin/kategoriler/<%= cat.id %>/sil" onsubmit="return confirm('“<%= cat.name.replace(/'/g, '') %>” kategorisini silmek istediğinize emin misiniz? Bu kategorideki ürünler kategorisiz kalır.');">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button type="submit" class="btn btn-sm btn-danger">Sil</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="panel" style="padding:22px; height:fit-content;">
+    <h2 style="font-size:16px; margin-bottom:18px;">Yeni kategori ekle</h2>
+    <form method="post" action="/admin/kategoriler">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="field">
+        <label for="name">Kategori adı</label>
+        <input type="text" id="name" name="name" maxlength="80" required placeholder="Örn. Kadın, Erkek, Aksesuar…">
+      </div>
+      <button type="submit" class="btn btn-solid" style="width:100%;">Kategori ekle</button>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/admin-foot') %>

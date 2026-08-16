@@ -1,0 +1,102 @@
+<% const activeNav = 'katalog'; %>
+<%- include('../partials/site-head', { title, activeNav }) %>
+
+<section class="catalog-head">
+  <div class="container">
+    <span class="eyebrow">Vitrin</span>
+    <h1>Tüm Katalog</h1>
+  </div>
+</section>
+
+<section class="container">
+  <div class="filters">
+    <aside class="filter-panel">
+      <div class="search-box">
+        <form method="get" action="/katalog">
+          <% if (activeCategory) { %><input type="hidden" name="kategori" value="<%= activeCategory %>"><% } %>
+          <% if (activeSize) { %><input type="hidden" name="beden" value="<%= activeSize %>"><% } %>
+          <input type="text" name="q" placeholder="Ürün ara…" value="<%= search %>">
+        </form>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-title">Kategori</div>
+        <div class="filter-list">
+          <a href="/katalog<%= activeSize ? '?beden=' + encodeURIComponent(activeSize) : '' %>" class="<%= !activeCategory ? 'active' : '' %>">Tümü</a>
+          <% categories.forEach(function(cat) { %>
+            <% const params = new URLSearchParams(); params.set('kategori', cat.slug); if (activeSize) params.set('beden', activeSize); %>
+            <a href="/katalog?<%= params.toString() %>" class="<%= activeCategory === cat.slug ? 'active' : '' %>"><%= cat.name %></a>
+          <% }) %>
+        </div>
+      </div>
+
+      <% Object.keys(sizesGrouped).forEach(function(group) { %>
+        <div class="filter-group">
+          <div class="filter-title"><%= group %></div>
+          <div class="size-chip-grid">
+            <% sizesGrouped[group].forEach(function(sz) { %>
+              <% const params = new URLSearchParams(); if (activeCategory) params.set('kategori', activeCategory);
+                 const isActive = activeSize === sz.label;
+                 if (!isActive) params.set('beden', sz.label); %>
+              <a class="size-chip <%= isActive ? 'active' : '' %>" href="/katalog?<%= params.toString() %>"><%= sz.label %></a>
+            <% }) %>
+          </div>
+        </div>
+      <% }) %>
+
+      <% if (activeCategory || activeSize || search) { %>
+        <a href="/katalog" class="clear-filters">✕ Filtreleri temizle</a>
+      <% } %>
+    </aside>
+
+    <div>
+      <div class="catalog-toolbar">
+        <span class="result-count"><%= total %> ürün bulundu</span>
+      </div>
+
+      <% if (products.length) { %>
+        <div class="product-grid">
+          <% products.forEach(function(p, i) { %>
+            <a href="/urun/<%= p.slug %>" class="product-card reveal reveal-delay-<%= (i % 4) + 1 %>">
+              <div class="frame">
+                <div class="frame-badges">
+                  <% if (p.is_featured) { %><span class="badge badge-featured">Vitrin</span><% } %>
+                  <% if (p.stock_status === 'low_stock') { %><span class="badge badge-low">Az Kaldı</span><% } %>
+                  <% if (p.stock_status === 'out_of_stock') { %><span class="badge badge-out">Tükendi</span><% } %>
+                </div>
+                <img src="<%= p.images[0] ? p.images[0].url : '' %>" alt="<%= p.name %>" loading="lazy">
+              </div>
+              <div class="product-info">
+                <div>
+                  <h3><%= p.name %></h3>
+                  <span class="product-cat"><%= p.category_name || 'Genel' %></span>
+                </div>
+                <span class="product-sizes-mini"><%= p.sizes.length %> beden</span>
+              </div>
+            </a>
+          <% }) %>
+        </div>
+
+        <% if (totalPages > 1) { %>
+          <nav class="pagination" aria-label="Sayfalama">
+            <% for (let i = 1; i <= totalPages; i++) { %>
+              <% const params = new URLSearchParams(); if (activeCategory) params.set('kategori', activeCategory); if (activeSize) params.set('beden', activeSize); if (search) params.set('q', search); params.set('sayfa', i); %>
+              <% if (i === page) { %>
+                <span class="current"><%= i %></span>
+              <% } else { %>
+                <a href="/katalog?<%= params.toString() %>"><%= i %></a>
+              <% } %>
+            <% } %>
+          </nav>
+        <% } %>
+      <% } else { %>
+        <div class="empty-state">
+          <h3>Sonuç bulunamadı</h3>
+          <p>Farklı bir kategori, beden veya arama terimi deneyin.</p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/site-foot') %>

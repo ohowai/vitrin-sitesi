@@ -1,0 +1,28 @@
+{
+  "name": "vitrine-katalog",
+  "version": "1.0.0",
+  "description": "VITRINE — animasyonlu, admin panelli, SQL destekli ürün katalog sitesi (satın alma yok, sadece vitrin).",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "seed": "node src/db/seed.js",
+    "init-db": "node src/db/init.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "better-sqlite3": "^11.3.0",
+    "express-session": "^1.18.0",
+    "connect-sqlite3": "^0.9.15",
+    "bcryptjs": "^2.4.3",
+    "ejs": "^3.1.10",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.4.0",
+    "dotenv": "^16.4.5",
+    "express-validator": "^7.2.0",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.6"
+  }
+}
